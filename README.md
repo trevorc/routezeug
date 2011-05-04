@@ -18,8 +18,8 @@ Example:
 
 
     application = routezeug.router(
-        ('/',          index),
-        ('/:photo_id', photo),
+        ('GET', '/',          index),
+        ('*',   '/:photo_id', photo),
     )
 
     server = wsgiref.simple_server.make_server('', 8000, application)

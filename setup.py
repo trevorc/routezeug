@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='routezeug',
-    version='0.1.0',
+    version='0.1.1',
     url='https://github.com/trevorc/routezeug',
     descriptions='Minimally useful werkzeug routing',
     author='Trevor Caira',

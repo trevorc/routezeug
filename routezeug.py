@@ -36,9 +36,14 @@ import werkzeug.exceptions
 __all__ = ['router']
 
 def make_route(route_spec):
-    path, handler = route_spec
+    route = reversed(route_spec)
+    handler, path = next(route), next(route)
+    try:
+        method = next(route)
+    except StopIteration:
+        method = '*'
     pattern = '^' + re.sub(r':(\w+)', r'(?P<\1>[\w-]+)', path) + '$'
-    return (re.compile(pattern), handler)
+    return (method, re.compile(pattern), handler)
 
 
 def router(*patterns):
@@ -46,10 +51,15 @@ def router(*patterns):
 
     @werkzeug.Request.application
     def application(request):
-        for (regex, handler) in routes:
+        path_matched = False
+        for method, regex, handler in routes:
             match = regex.match(request.path)
             if match:
-                return handler(request, **match.groupdict())
+                path_matched = True
+                if method == '*' or request.method == method:
+                    return handler(request, **match.groupdict())
+        if path_matched:
+            return werkzeug.exceptions.MethodNotAllowed()
         return werkzeug.exceptions.NotFound()
 
     return application
