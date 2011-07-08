@@ -25,3 +25,5 @@ Example:
     server = wsgiref.simple_server.make_server('', 8000, application)
     server.serve_forever()
 
+
+See also: [Selector](http://lukearno.com/projects/selector/ "WSGI-level routing").
